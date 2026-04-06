@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 무인도에서 살아남기</title>
+<meta name="description" content="5년차 이상 백엔드 개발자의 AI 서바이벌 지수는? 무인도에서 AI와 함께 살아남을 수 있을까요?">
+<meta property="og:title" content="AI 무인도에서 살아남기">
+<meta property="og:description" content="백엔드 개발자의 AI 서바이벌 지수를 측정해보세요!">
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js" integrity="sha384-DKYJZ8NLiK8MN4/C5P2dtSmLQ4KwPaoqAfyA/DfmEc1VDxu4yyC7wy6K1Hs90nka" crossorigin="anonymous"></script>
+<style>
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #131314;
+  --bg-card: #1d1d1f;
+  --bg-card-hover: #2a2a2d;
+  --pink: #ff40d7;
+  --pink-light: #ff82e5;
+  --pink-dim: rgba(255, 64, 215, 0.15);
+  --pink-glow: rgba(255, 64, 215, 0.4);
+  --text: #ffffff;
+  --text-dim: #9ca3af;
+  --text-muted: #6b7280;
+  --radius: 16px;
+}
+
+body {
+  font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 500px;
+  width: 100%;
+}
+
+.screen { display: none; animation: fadeIn 0.5s ease; }
+.screen.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-8px) rotate(2deg); }
+  75% { transform: translateY(-4px) rotate(-1deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px var(--pink-glow); }
+  50% { box-shadow: 0 0 40px var(--pink-glow), 0 0 60px rgba(255, 64, 215, 0.2); }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px) rotate(-1deg); }
+  75% { transform: translateX(4px) rotate(1deg); }
+}
+
+/* ===== INTRO ===== */
+.intro { text-align: center; padding-top: 20px; }
+
+.island-scene {
+  position: relative;
+  font-size: 64px;
+  margin-bottom: 16px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.island-scene .isle { animation: float 4s ease-in-out infinite; }
+.island-scene .robot { animation: float 3s ease-in-out 0.5s infinite; }
+.island-scene .wave {
+  position: absolute;
+  bottom: -4px;
+  font-size: 28px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.intro h1 {
+  font-size: 32px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--pink), var(--pink-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+  line-height: 1.3;
+  letter-spacing: -0.5px;
+}
+
+.intro .subtitle {
+  font-size: 15px;
+  color: var(--text-dim);
+  margin-bottom: 28px;
+}
+
+.intro .desc {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  margin-bottom: 36px;
+  padding: 0 12px;
+}
+
+.intro .desc strong {
+  color: var(--pink-light);
+  font-weight: 600;
+}
+
+.badge-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pink-light);
+  background: var(--pink-dim);
+  border-radius: 50px;
+  border: 1px solid rgba(255, 64, 215, 0.2);
+}
+
+.btn-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 44px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(135deg, var(--pink), var(--pink-light));
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: glow 3s ease-in-out infinite;
+  letter-spacing: -0.3px;
+}
+
+.btn-start:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 40px var(--pink-glow);
+}
+
+.btn-start:active { transform: scale(0.97); }
+
+/* ===== QUIZ ===== */
+.quiz-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.progress-bar {
+  flex: 1;
+  background: var(--bg-card);
+  border-radius: 20px;
+  height: 6px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--pink), var(--pink-light));
+  border-radius: 20px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--pink-light);
+  margin-left: 14px;
+  white-space: nowrap;
+}
+
+.question-card {
+  animation: slideIn 0.4s ease;
+}
+
+.q-situation {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+  border-left: 4px solid var(--pink);
+}
+
+.q-situation-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--pink-light);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.q-situation-text {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.question-text {
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.option-btn {
+  display: block;
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--bg-card);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-align: left;
+  line-height: 1.6;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.option-btn:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--pink);
+  transform: translateX(4px);
+}
+
+.option-btn:active { transform: scale(0.98); }
+
+.option-btn.selected {
+  background: var(--pink-dim);
+  border-color: var(--pink);
+}
+
+.q-image {
+  width: 100%;
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ===== LOADING ===== */
+.loading-screen {
+  text-align: center;
+  padding: 80px 0;
+}
+
+.loading-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-dim);
+  margin-top: 20px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.loading-bar {
+  width: 200px;
+  height: 4px;
+  background: var(--bg-card);
+  border-radius: 4px;
+  margin: 16px auto 0;
+  overflow: hidden;
+}
+
+.loading-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--pink), var(--pink-light));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.loading-emoji {
+  font-size: 56px;
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+/* ===== RESULT ===== */
+.result { text-align: center; }
+
+.result-emoji {
+  font-size: 80px;
+  margin-bottom: 4px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.result-grade {
+  display: inline-block;
+  padding: 6px 20px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+.grade-s { background: linear-gradient(135deg, var(--pink), var(--pink-light)); color: #fff; }
+.grade-a { background: linear-gradient(135deg, #a855f7, #818cf8); color: #fff; }
+.grade-b { background: var(--bg-card); color: var(--text-dim); border: 1px solid #374151; }
+.grade-c { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #1a1a1a; }
+.grade-d { background: var(--bg-card); color: var(--text-dim); border: 1px solid #374151; }
+
+.result-title {
+  font-size: 26px;
+  font-weight: 900;
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+.result-subtitle {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-bottom: 28px;
+}
+
+.score-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.score-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: countUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.score-circle.s { background: linear-gradient(135deg, var(--pink), var(--pink-light)); }
+.score-circle.a { background: linear-gradient(135deg, #a855f7, #818cf8); }
+.score-circle.b { background: var(--bg-card); border: 2px solid #374151; }
+.score-circle.c { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+.score-circle.d { background: var(--bg-card); border: 2px solid #374151; }
+
+.score-number {
+  font-size: 32px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+}
+
+.score-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  margin-top: 2px;
+}
+
+.result-desc {
+  font-size: 15px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  margin-bottom: 20px;
+  padding: 0 8px;
+}
+
+/* ===== INFO GATE ===== */
+.info-gate { padding: 20px 0; }
+.info-gate h2 { font-size: 22px; font-weight: 900; margin-bottom: 6px; letter-spacing: -0.3px; }
+.info-gate .info-sub { font-size: 14px; color: var(--text-dim); margin-bottom: 28px; line-height: 1.6; }
+.info-form { display: flex; flex-direction: column; gap: 14px; }
+.info-field label { display: block; font-size: 12px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.info-field input, .info-field select { width: 100%; padding: 14px 16px; font-family: inherit; font-size: 15px; font-weight: 500; color: var(--text); background: var(--bg-card); border: 2px solid transparent; border-radius: var(--radius); outline: none; transition: border-color 0.2s; -webkit-appearance: none; appearance: none; }
+.info-field select { background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%239ca3af' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; }
+.info-field input:focus, .info-field select:focus { border-color: var(--pink); }
+.info-field input::placeholder { color: var(--text-muted); }
+.btn-reveal { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 18px; margin-top: 8px; font-size: 17px; font-weight: 800; color: #fff; background: linear-gradient(135deg, var(--pink), var(--pink-light)); border: none; border-radius: 50px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; animation: glow 3s ease-in-out infinite; letter-spacing: -0.3px; font-family: inherit; }
+.btn-reveal:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 40px var(--pink-glow); }
+.btn-reveal:active { transform: scale(0.97); }
+.info-error { color: var(--pink); font-size: 13px; font-weight: 600; text-align: center; margin-top: 4px; display: none; }
+
+.info-anim {
+  text-align: center;
+  margin-bottom: 20px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.info-anim-emoji { font-size: 40px; display: inline-block; }
+.anim1 { animation: float 3s ease-in-out infinite; }
+.anim2 { animation: float 2.5s ease-in-out 0.3s infinite; }
+.anim3 { animation: float 3.5s ease-in-out 0.6s infinite; }
+
+.privacy-box {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-top: 4px;
+}
+.privacy-text {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  max-height: 160px;
+  overflow-y: auto;
+  margin-bottom: 14px;
+  padding-right: 4px;
+}
+.privacy-text strong { color: var(--text); font-size: 13px; }
+.privacy-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+.privacy-check input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--pink);
+  cursor: pointer;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid #374151;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  margin-bottom: 16px;
+}
+.btn-back:hover { color: var(--text); border-color: var(--text-dim); }
+
+.cta-box {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  margin-bottom: 28px;
+  border: 1px solid rgba(255, 64, 215, 0.1);
+}
+
+.cta-box p {
+  font-size: 14px;
+  line-height: 1.8;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 32px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(135deg, var(--pink), var(--pink-light));
+  border-radius: 50px;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  letter-spacing: -0.3px;
+}
+
+.cta-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--pink-glow);
+}
+
+.share-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 28px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.15s;
+  font-family: inherit;
+}
+
+.share-btn:hover { transform: translateY(-1px); }
+.share-btn:active { transform: scale(0.96); }
+
+.share-copy { background: var(--bg-card); color: var(--text); border: 1px solid #374151; }
+.share-kakao { background: #fee500; color: #1a1a1a; }
+.share-linkedin { background: #0a66c2; color: #fff; }
+
+.beyond-banner {
+  background: linear-gradient(135deg, var(--pink), var(--pink-light));
+  border-radius: var(--radius);
+  padding: 32px 24px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.beyond-banner-sub {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 10px;
+}
+
+.beyond-banner-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  letter-spacing: -0.3px;
+}
+
+.beyond-banner-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--pink);
+  background: #fff;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  letter-spacing: -0.3px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  width: 100%;
+  justify-content: center;
+}
+
+.beyond-banner-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.banner-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.banner-input, .banner-select {
+  width: 100%;
+  padding: 14px 16px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  background: rgba(255,255,255,0.18);
+  border: 1.5px solid rgba(255,255,255,0.3);
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.banner-input:focus, .banner-select:focus {
+  border-color: rgba(255,255,255,0.6);
+}
+
+.banner-input::placeholder {
+  color: rgba(255,255,255,0.55);
+}
+
+.banner-select {
+  color: rgba(255,255,255,0.55);
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='rgba(255,255,255,0.4)' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+.banner-select:has(option:checked:not([disabled])) {
+  color: #fff;
+}
+
+.banner-select option {
+  background: #1d1d1f;
+  color: #fff;
+}
+
+.banner-privacy {
+  padding: 12px 0;
+}
+
+.banner-error {
+  color: #ffd700;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  display: none;
+}
+
+.banner-success {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  padding: 12px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  display: none;
+}
+
+.btn-retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid #374151;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.btn-retry:hover {
+  color: var(--text);
+  border-color: var(--text-dim);
+}
+
+.toast {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--pink);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 16px 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.footer a {
+  color: var(--pink-light);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- INTRO -->
+  <div id="intro" class="screen active intro">
+    <div class="island-scene">
+      <span class="isle">🏝️</span>
+      <span class="robot">🤖</span>
+      <span class="wave" style="left: 10%">~</span>
+      <span class="wave" style="right: 10%; animation-delay: 1s">~</span>
+    </div>
+    <h1>AI 무인도에서<br>살아남기</h1>
+    <p class="subtitle">당신의 AI 서바이벌 지수는?</p>
+    <div class="badge-row">
+      <span class="badge">Backend Only</span>
+      <span class="badge">6문항 2분</span>
+    </div>
+    <p class="desc">
+      당신은 <strong>시니어 백엔드 개발자</strong>.<br>
+      갑자기 무인도에 떨어졌고, 가진 건 노트북 하나.<br>
+      다행히 AI는 돌아간다.<br><br>
+      프로덕션 장애보다 빡센 6가지 생존 미션.<br>
+      당신의 AI 센스를 증명하세요.
+    </p>
+    <button class="btn-start" onclick="startQuiz()">생존 시작 →</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz" class="screen">
+    <div class="quiz-header">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-text" id="progressText"></div>
+    </div>
+    <div id="questionArea"></div>
+  </div>
+
+  <!-- LOADING -->
+  <div id="loading" class="screen">
+    <div class="loading-screen">
+      <div class="loading-emoji">🏝️</div>
+      <div class="loading-text" id="loadingText">AI 서바이벌 지수 분석 중...</div>
+      <div class="loading-bar"><div class="loading-bar-fill" id="loadingBar"></div></div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result" class="screen result"></div>
+
+  <div class="footer">
+    <a href="https://beyond.imweb.me/" target="_blank" rel="noopener">BEYOND ENOUGH</a> · imweb
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// 카카오 SDK 초기화
+Kakao.init('925dfe7c4e01f1f6ed82502ab1bde13a');
+
+// 이미지 프리로딩
+const preloadImages = ['images/q1.png','images/q2.png','images/q3.png','images/q4.png','images/q5.png','images/q6.png'];
+preloadImages.forEach(src => { const img = new Image(); img.src = src; });
+
+const questions = [
+  {
+    situation: "새벽 3시, 무인도에 불시착했다. 주변은 칠흑 같은 어둠. 노트북을 켜니 AI가 살아있다.",
+    emoji: "🌊",
+    label: "INCIDENT",
+    image: "images/q1.png",
+    text: "첫 프롬프트, 뭘 치겠습니까?",
+    options: [
+      { text: "현재 상황을 구조화해서 입력한다.\n\"해안가, 열대기후 추정, 장비: 노트북+충전기. 생존 우선순위와 첫 12시간 액션플랜을 표로 정리해줘\"", score: 10 },
+      { text: "\"무인도 생존법 알려줘\" — 일단 넓게 물어보고 필요한 걸 추려낸다", score: 7 },
+      { text: "\"여기가 어디야\" — 위치부터 확인하자", score: 3 },
+      { text: "AI는 닫고 배터리부터 아낀다. 노트북으로 불빛 만들어서 주변이나 살핀다", score: 0 }
+    ]
+  },
+  {
+    situation: "해가 떴다. 식수가 없다. 서버 메모리 누수처럼, 갈증이 점점 한계에 다가온다.",
+    emoji: "💧",
+    label: "CRITICAL",
+    image: "images/q2.png",
+    text: "AI에게 정수 시스템을 요청할 때, 당신의 프롬프트 스타일은?",
+    options: [
+      { text: "\"constraint: 도구 없음, 소재: 대나무+넓은잎+모래. 이 조건에서 가능한 정수법을 효율순으로 정렬하고, 각각 실패 시 fallback을 명시해줘\"", score: 10 },
+      { text: "\"바닷물을 식수로 바꾸는 방법 3가지 비교해줘\"", score: 7 },
+      { text: "\"물 구하는 법\" 검색", score: 3 },
+      { text: "직감으로 계곡을 찾아 나선다. 코드도 일단 돌려보는 스타일", score: 0 }
+    ]
+  },
+  {
+    situation: "먹을 수 있는 열매를 발견했다. 하지만 독이 있을 수도 있다.\n경험상, 프로덕션에서 검증 안 된 라이브러리 쓰다가 터진 적이 한두 번이 아니다.",
+    emoji: "🍄",
+    label: "VALIDATION",
+    image: "images/q3.png",
+    text: "이 열매, 어떻게 검증하겠습니까?",
+    options: [
+      { text: "사진을 여러 각도로 찍어 AI에게 보내고, 식별 결과를 cross-check한다.\n추가로 \"이 종과 혼동되는 독성 식물 목록\"도 요청한다", score: 10 },
+      { text: "AI에게 사진 보내고 \"먹어도 되는지\" 물어본다. 결과를 믿되 소량만 테스트", score: 7 },
+      { text: "\"빨간 열매 먹어도 돼?\" 텍스트로만 질문한다", score: 3 },
+      { text: "먹어보고 탈 나면 그때 AI한테 물어본다. 카나리 배포 아닌가?", score: 0 }
+    ]
+  },
+  {
+    situation: "폭풍 경보. 대피소를 만들어야 한다.\n시간은 2시간. 마치 장애 발생 후 핫픽스 배포까지의 데드라인 같다.",
+    emoji: "⛈️",
+    label: "HOTFIX",
+    image: "images/q4.png",
+    text: "시간 압박 속에서 AI를 어떻게 활용하겠습니까?",
+    options: [
+      { text: "재료 사진을 보내고 \"2시간 내 1인이 만들 수 있는 구조물, 방수/내풍 성능 순으로 3안 제시. 각 안의 예상 소요시간과 위험도 포함해줘\"", score: 10 },
+      { text: "\"대피소 만드는 법\" 물어보고 가장 간단한 걸 바로 실행한다", score: 7 },
+      { text: "AI는 너무 느리다. 일단 나뭇가지 모아서 몸으로 때운다", score: 3 },
+      { text: "동굴을 찾는다. 인프라는 직접 만들지 말고 있는 거 쓰는 게 맞다", score: 0 }
+    ]
+  },
+  {
+    situation: "밤이다. 숲에서 정체 모를 소리가 들린다.\nGrafana 대시보드에서 이상 스파이크를 발견한 느낌이다.",
+    emoji: "🌙",
+    label: "MONITORING",
+    image: "images/q5.png",
+    text: "원인 불명의 위협. 어떻게 대응하겠습니까?",
+    options: [
+      { text: "소리를 녹음해서 AI에게 분석 요청.\n동시에 \"이 지역 야행성 동물 DB에서 위험도 high인 것만 필터해서 대응법과 함께 알려줘\"", score: 10 },
+      { text: "AI에게 \"열대 무인도 야간 위험 동물 Top 5와 대처법\" 미리 물어둔다", score: 7 },
+      { text: "소리가 나는 방향을 직접 확인하러 간다. 로그는 직접 봐야 제맛", score: 3 },
+      { text: "무시하고 잔다. alert fatigue라고, 다 대응하면 몸이 안 남는다", score: 0 }
+    ]
+  },
+  {
+    situation: "드디어 구조 신호를 보낼 기회가 왔다!\n하지만 배터리 5%, 신호를 보낼 수 있는 기회는 사실상 한 번뿐이다.",
+    emoji: "📡",
+    label: "DEPLOY",
+    image: "images/q6.png",
+    text: "마지막 배포. 실패하면 롤백도 없다. AI에게 뭘 요청하겠습니까?",
+    options: [
+      { text: "\"배터리 5%로 할 수 있는 모든 구조 신호 방법을 나열하고, 발견 확률/소요 전력/지속시간 매트릭스를 만들어줘. 최적 조합을 추천해\"", score: 10 },
+      { text: "\"가장 효과적인 SOS 신호 방법 하나만 알려줘\" — 의사결정을 빠르게", score: 7 },
+      { text: "\"모스 부호 알려줘\" 하고 나머지는 내가 판단한다", score: 3 },
+      { text: "AI에 쓸 배터리도 아깝다. 큰 불을 피운다. 클래식이 답이다", score: 0 }
+    ]
+  }
+];
+
+let current = 0;
+let totalScore = 0;
+let answers = []; // 뒤로가기용 답변 기록
+
+function startQuiz() {
+  current = 0;
+  totalScore = 0;
+  answers = [];
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  const pct = ((current) / questions.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${current + 1} / ${questions.length}`;
+
+  const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+
+  document.getElementById('questionArea').innerHTML = `
+    <div class="question-card" key="${current}">
+      ${current > 0 ? '<button class="btn-back" onclick="goBack()">← 이전</button>' : ''}
+      <div class="q-situation">
+        <div class="q-situation-label">${q.emoji} ${q.label}</div>
+        <div class="q-situation-text">${q.situation}</div>
+      </div>
+      ${q.image ? `<img class="q-image" src="${q.image}" alt="상황 일러스트">` : ''}
+      <div class="question-text">${q.text}</div>
+      <div class="options">
+        ${shuffled.map(opt => `
+          <button class="option-btn" onclick="selectOption(this, ${opt.score})">
+            ${opt.text}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function selectOption(btn, score) {
+  btn.classList.add('selected');
+  document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+  totalScore += score;
+  answers.push(score);
+
+  setTimeout(() => {
+    current++;
+    if (current < questions.length) {
+      renderQuestion();
+    } else {
+      document.getElementById('progressFill').style.width = '100%';
+      setTimeout(() => showLoading(), 200);
+    }
+  }, 350);
+}
+
+function goBack() {
+  if (current > 0) {
+    current--;
+    const lastScore = answers.pop();
+    totalScore -= lastScore;
+    renderQuestion();
+  }
+}
+
+function formatPhone(input) {
+  let val = input.value.replace(/\D/g, '');
+  if (val.length > 11) val = val.slice(0, 11);
+  if (val.length >= 8) {
+    input.value = val.slice(0,3) + '-' + val.slice(3,7) + '-' + val.slice(7);
+  } else if (val.length >= 4) {
+    input.value = val.slice(0,3) + '-' + val.slice(3);
+  } else {
+    input.value = val;
+  }
+}
+
+function submitCta() {
+  const name = document.getElementById('ctaName').value.trim();
+  const email = document.getElementById('ctaEmail').value.trim();
+  const phone = document.getElementById('ctaPhone').value.trim();
+  const exp = document.getElementById('ctaExp').value;
+  const company = document.getElementById('ctaCompany').value.trim();
+  const privacy = document.getElementById('ctaPrivacy').checked;
+  const err = document.getElementById('ctaError');
+  const emailErr = document.getElementById('ctaEmailError');
+
+  err.style.display = 'none';
+  emailErr.style.display = 'none';
+
+  if (!name || !email || !exp || !company || !privacy) { err.style.display = 'block'; return; }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) { emailErr.style.display = 'block'; return; }
+
+  const typeKey = getTypeKey();
+  const typeNames = { architect: 'AI 서바이벌 아키텍트', tactician: 'AI 택티션', rookie: 'AI 서바이벌 루키', survivor: '맨손 서바이버' };
+  const data = {
+    timestamp: new Date().toLocaleString('ko-KR'),
+    name: name,
+    email: email,
+    phone: phone || '',
+    experience: exp,
+    company: company,
+    result: typeNames[typeKey],
+    score: totalScore
+  };
+
+  const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxeSCKYtS_ZzSXtdxKT-_cbRUt_FBw3LMvz057nmn9-CRjLpyWXqV4OZWU8dEdkcRZt/exec';
+
+  fetch(SHEET_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).catch(err => console.log('Sheet save error:', err));
+
+  const btn = document.getElementById('ctaSubmitBtn');
+  btn.textContent = '등록 완료!';
+  btn.style.background = 'rgba(255,255,255,0.2)';
+  btn.style.color = '#fff';
+  btn.disabled = true;
+  document.getElementById('ctaFormSuccess').style.display = 'block';
+}
+
+function showLoading() {
+  showScreen('loading');
+  const bar = document.getElementById('loadingBar');
+  const txt = document.getElementById('loadingText');
+  const messages = [
+    '프롬프트 품질 분석 중...',
+    'AI 활용 패턴 매칭 중...',
+    '생존 확률 계산 중...',
+    '서바이벌 등급 산출 중...'
+  ];
+
+  let step = 0;
+  const interval = setInterval(() => {
+    step++;
+    bar.style.width = (step * 25) + '%';
+    if (step <= 4) txt.textContent = messages[step - 1];
+    if (step >= 4) {
+      clearInterval(interval);
+      setTimeout(() => showResult(), 600);
+    }
+  }, 500);
+}
+
+function getTypeKey() {
+  if (totalScore >= 46) return 'architect';
+  if (totalScore >= 31) return 'tactician';
+  if (totalScore >= 16) return 'rookie';
+  return 'survivor';
+}
+
+function showResult(fromShare) {
+  const typeKey = fromShare || getTypeKey();
+  const ctaUrl = 'https://beyond.imweb.me/';
+
+  const types = {
+    architect: {
+      title: 'AI 서바이벌 아키텍트',
+      subtitle: 'AI를 진짜 "시스템"으로 쓸 줄 아는 사람',
+      emoji: '👑',
+      desc: '제약조건을 명확히 하고, 구조화된 프롬프트로 AI의 최대 성능을 끌어냅니다.<br>AI가 틀릴 수 있다는 것도 알고, 결과를 검증할 줄도 압니다.',
+      leadIn: '이 실력, 아임웹에서 발휘해보세요.'
+    },
+    tactician: {
+      title: 'AI 택티션',
+      subtitle: 'AI를 전략적으로 활용하기 시작한 단계',
+      emoji: '🧭',
+      desc: 'AI에게 올바른 질문을 던질 줄 알고, 결과를 실무에 연결하는 감각이 있습니다.<br>맥락과 제약조건 전달을 조금 더 다듬으면 아키텍트 레벨도 금방입니다.',
+      leadIn: '아임웹에서 매일 AI와 일하면, 금방 아키텍트입니다.'
+    },
+    rookie: {
+      title: 'AI 서바이벌 루키',
+      subtitle: 'AI에게 물어볼 줄은 아는, 성장 가능성이 큰',
+      emoji: '🌱',
+      desc: 'AI를 쓰긴 쓰는데, 아직 "잘 물어보는 법"까지는 도달하지 못한 상태.<br>"잘 물어보는 것"이 곧 실력인 시대, 조금만 더 갈고닦으면 확 달라집니다.',
+      leadIn: 'AI를 잘 쓰는 팀에서 일하면, 성장 속도가 다릅니다.'
+    },
+    survivor: {
+      title: '맨손 서바이버',
+      subtitle: 'AI 없이도 살아남는 근성파',
+      emoji: '🏕️',
+      desc: '아직 AI를 적극적으로 활용하지 않는 스타일이군요.<br>하지만 무인도에서 살아남은 건 사실입니다. 개발 근성은 이미 증명됐어요.<br>여기에 AI가 더해지면, 생산성이 완전히 달라집니다.',
+      leadIn: '당신의 근성에 AI가 더해지는 경험, 해보시겠어요?'
+    }
+  };
+
+  const imwebCta = `→ <strong>전사 AI 지원</strong> — 반복적인 일엔 AI를 쓰고 개발자로서 제품에 집중할 수 있도록, AI 활용에 필요한 비용과 환경을 지원해드려요.<br>→ <strong>언어 제한 없음</strong> — Node.js, Kotlin, Go, Rust 등 제품과 기술 방향성에 맞는 스택을 선택하고 결정해요.<br><br>무엇보다도, <strong>적당함으로 풀 수 없는 문제</strong>를 풀고 있습니다.`;
+
+  const t = types[typeKey];
+
+  // URL에 결과 파라미터 추가 (4번)
+  if (!fromShare) {
+    const newUrl = window.location.pathname + '?r=' + typeKey;
+    history.replaceState(null, '', newUrl);
+  }
+
+  document.getElementById('result').innerHTML = `
+    <div class="result-emoji">${t.emoji}</div>
+    <h2 class="result-title">${t.title}</h2>
+    <p class="result-subtitle">${t.subtitle}</p>
+    <div class="result-desc">${t.desc}</div>
+    <div class="share-section">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;width:100%;">
+        <button class="share-btn share-copy" onclick="copyLink()">결과 링크 복사</button>
+        <button class="share-btn share-kakao" onclick="shareKakao()">카카오톡 공유</button>
+        <button class="share-btn share-linkedin" onclick="shareLinkedIn()">LinkedIn 공유</button>
+        ${fromShare ? '<button class="share-btn" style="background:var(--pink);color:#fff;" onclick="location.href=location.pathname">나도 테스트하기 →</button>' : '<button class="share-btn" style="background:transparent;color:var(--text-dim);border:1px solid #374151;" onclick="startQuiz()">다시 도전하기</button>'}
+      </div>
+    </div>
+    <div class="cta-box">
+      <p style="text-align:center;font-weight:700;margin-bottom:12px;color:var(--pink-light);">${t.leadIn}</p>
+      <p style="font-size:14px;line-height:1.8;text-align:left;margin-bottom:0;"><strong>아임웹은 이렇게 일해요.</strong><br><br>${imwebCta}</p>
+    </div>
+    <div class="beyond-banner">
+      <p class="beyond-banner-sub">아임웹의 일하는 방식을 더 알고 싶다면?</p>
+      <p class="beyond-banner-title">AI로 기술적 문제를 해결하며,<br>제품과 비즈니스에 기여하는 경험을 해보세요</p>
+      <div class="banner-form">
+        <input class="banner-input" type="text" id="ctaName" placeholder="이름 *">
+        <input class="banner-input" type="email" id="ctaEmail" placeholder="이메일 *">
+        <div class="banner-error" id="ctaEmailError">올바른 이메일 형식을 입력해주세요.</div>
+        <input class="banner-input" type="tel" id="ctaPhone" placeholder="연락처 (선택) 숫자만 입력" oninput="formatPhone(this)">
+        <select class="banner-select" id="ctaExp">
+          <option value="" disabled selected>백엔드 개발 경력 *</option>
+          <option value="~3">3년 미만</option>
+          <option value="3~5">3년 이상 ~ 5년 미만</option>
+          <option value="5~7">5년 이상 ~ 7년 미만</option>
+          <option value="7~10">7년 이상 ~ 10년 미만</option>
+          <option value="10+">10년 이상</option>
+        </select>
+        <input class="banner-input" type="text" id="ctaCompany" placeholder="현재 회사 *">
+        <div class="banner-privacy">
+          <details>
+            <summary style="cursor:pointer;font-size:12px;color:rgba(255,255,255,0.6);">개인정보 수집 동의 안내 보기</summary>
+            <div style="font-size:11px;color:rgba(255,255,255,0.5);line-height:1.6;margin-top:8px;">
+              아임웹은 채용 정보 제공과 관련하여 본인 확인 및 채용 포지션 안내 목적을 위하여 귀하의 정보를 수집합니다.<br>
+              수집항목: 성명, 이메일, 연락처, 회사명, 경력연수<br>
+              보유기간: 지원 후 6개월 간, 삭제 요청 시 즉시 파기<br>
+              ※ 동의를 거부할 권리가 있으며, 거부 시 채용 포지션 안내가 어려울 수 있습니다.
+            </div>
+          </details>
+          <label style="display:flex;align-items:center;gap:8px;margin-top:10px;cursor:pointer;font-size:13px;color:#fff;font-weight:600;">
+            <input type="checkbox" id="ctaPrivacy" style="width:16px;height:16px;accent-color:var(--pink);">
+            개인정보 수집에 동의합니다 *
+          </label>
+        </div>
+        <div class="banner-error" id="ctaError">필수 항목을 모두 입력하고 개인정보 수집에 동의해주세요.</div>
+        <button class="beyond-banner-btn" id="ctaSubmitBtn" onclick="submitCta()">채용 포지션 안내 받기 →</button>
+        <div class="banner-success" id="ctaFormSuccess">등록이 완료되었습니다. 맞는 포지션이 열리면 연락드릴게요!</div>
+      </div>
+    </div>
+  `;
+
+  showScreen('result');
+}
+
+// 페이지 로드 시 URL 파라미터 체크 (4번 - 공유 링크로 바로 결과 보기)
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const r = params.get('r');
+  if (r && ['architect','tactician','rookie','survivor'].includes(r)) {
+    showResult(r);
+  }
+});
+
+function getShareUrl() {
+  const typeKey = getTypeKey();
+  const base = window.location.origin + window.location.pathname;
+  return base + '?r=' + typeKey;
+}
+
+function copyLink() {
+  navigator.clipboard.writeText(getShareUrl()).then(() => {
+    showToast('링크가 복사되었어요!');
+  }).catch(() => {
+    showToast('링크 복사에 실패했어요');
+  });
+}
+
+function shareKakao() {
+  const typeKey = getTypeKey();
+  const types = { architect: 'AI 서바이벌 아키텍트', tactician: 'AI 택티션', rookie: 'AI 서바이벌 루키', survivor: '맨손 서바이버' };
+  const shareUrl = getShareUrl();
+  if (window.Kakao && Kakao.isInitialized()) {
+    Kakao.Share.sendCustom({
+      templateId: 131735,
+      templateArgs: {
+        result_type: types[typeKey],
+        page_url: shareUrl
+      }
+    });
+  } else {
+    showToast('카카오톡 공유는 배포 후 사용 가능해요');
+  }
+}
+
+function shareLinkedIn() {
+  const shareUrl = encodeURIComponent(getShareUrl());
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`, '_blank');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+</script>
+</body>
+</html>
