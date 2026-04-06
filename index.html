@@ -611,6 +611,27 @@ body {
   box-shadow: 0 8px 24px rgba(0,0,0,0.3);
 }
 
+.btn-beyond-bottom {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pink-light);
+  background: transparent;
+  border: 1px solid rgba(255, 64, 215, 0.3);
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+
+.btn-beyond-bottom:hover {
+  background: var(--pink-dim);
+  border-color: var(--pink);
+}
+
 .banner-form {
   display: flex;
   flex-direction: column;
@@ -792,7 +813,7 @@ body {
   <div id="result" class="screen result"></div>
 
   <div class="footer">
-    <a href="https://beyond.imweb.me/" target="_blank" rel="noopener">BEYOND ENOUGH</a> · imweb
+    <a href="https://beyond.imweb.me/?utm_source=ai-island-quiz&utm_medium=ads&utm_campaign=20260406_ai-island" target="_blank" rel="noopener">BEYOND ENOUGH</a> · imweb
   </div>
 </div>
 
@@ -1016,7 +1037,6 @@ function submitCta() {
   btn.style.background = 'rgba(255,255,255,0.2)';
   btn.style.color = '#fff';
   btn.disabled = true;
-  document.getElementById('ctaFormSuccess').style.display = 'block';
 }
 
 function showLoading() {
@@ -1051,7 +1071,7 @@ function getTypeKey() {
 
 function showResult(fromShare) {
   const typeKey = fromShare || getTypeKey();
-  const ctaUrl = 'https://beyond.imweb.me/';
+  const ctaUrl = 'https://beyond.imweb.me/?utm_source=ai-island-quiz&utm_medium=ads&utm_campaign=20260406_ai-island';
 
   const types = {
     architect: {
@@ -1144,10 +1164,11 @@ function showResult(fromShare) {
           </label>
         </div>
         <div class="banner-error" id="ctaError">필수 항목을 모두 입력하고 개인정보 수집에 동의해주세요.</div>
-        <button class="beyond-banner-btn" id="ctaSubmitBtn" onclick="submitCta()">채용 포지션 안내 받기 →</button>
-        <div class="banner-success" id="ctaFormSuccess">등록이 완료되었습니다. 맞는 포지션이 열리면 연락드릴게요!</div>
+        <button class="beyond-banner-btn" id="ctaSubmitBtn" onclick="submitCta()">관심 표현하기 →</button>
+        <p style="font-size:13px;color:rgba(255,255,255,0.7);text-align:center;margin-top:12px;line-height:1.5;">제출해주신 정보를 바탕으로, 적합한 포지션이 있을 경우<br>별도로 연락드리겠습니다.</p>
       </div>
     </div>
+    <a href="https://beyond.imweb.me/?utm_source=ai-island-quiz&utm_medium=ads&utm_campaign=20260406_ai-island" target="_blank" rel="noopener" class="btn-beyond-bottom">채용 중인 포지션 보러가기 →</a>
   `;
 
   showScreen('result');
