@@ -1030,7 +1030,7 @@ function submitCta() {
   }).catch(err => console.log('Sheet save error:', err));
 
   const btn = document.getElementById('ctaSubmitBtn');
-  btn.textContent = '등록 완료!';
+  btn.textContent = '신청 완료!';
   btn.style.background = 'rgba(255,255,255,0.2)';
   btn.style.color = '#fff';
   btn.disabled = true;
@@ -1101,7 +1101,7 @@ function showResult(fromShare) {
     }
   };
 
-  const imwebCta = `→ <strong>전사 AI 지원</strong> — 반복적인 일엔 AI를 쓰고 개발자로서 제품에 집중할 수 있도록, AI 활용에 필요한 비용과 환경을 지원해드려요.<br>→ <strong>언어 제한 없음</strong> — Node.js, Kotlin, Go, Rust 등 제품과 기술 방향성에 맞는 스택을 선택하고 결정해요.<br><br>무엇보다도, <strong>적당함으로 풀 수 없는 문제</strong>를 풀고 있습니다.`;
+  const imwebCta = `→ <strong>전사 구성원에게 AI를 지원해요</strong> — 반복적인 일엔 AI를 쓰고 제품에 집중할 수 있도록, AI 활용에 필요한 비용과 환경을 지원해드려요.<br>→ <strong>개발 언어에 제한이 없어요</strong> — Node.js, Kotlin, Go, Rust 등 제품과 기술 방향성에 맞는 스택을 선택하고 결정해요.`;
 
   const t = types[typeKey];
 
@@ -1124,12 +1124,11 @@ function showResult(fromShare) {
         ${fromShare ? '<button class="share-btn" style="background:var(--pink);color:#fff;" onclick="location.href=location.pathname">나도 테스트하기 →</button>' : '<button class="share-btn" style="background:transparent;color:var(--text-dim);border:1px solid #374151;" onclick="startQuiz()">다시 도전하기</button>'}
       </div>
     </div>
-    <div class="cta-box">
-      <p style="text-align:center;font-weight:700;margin-bottom:12px;color:var(--pink-light);">${t.leadIn}</p>
-      <p style="font-size:14px;line-height:1.8;text-align:left;margin-bottom:0;"><strong>아임웹은 이렇게 일해요.</strong><br><br>${imwebCta}</p>
-    </div>
     <div class="beyond-banner">
-      <p class="beyond-banner-sub">아임웹의 일하는 방식을 더 알고 싶다면?</p>
+      <p style="text-align:center;font-weight:700;margin-bottom:20px;color:rgba(255,255,255,0.85);">${t.leadIn}</p>
+      <p style="font-size:14px;line-height:1.8;text-align:left;margin-bottom:24px;color:rgba(255,255,255,0.9);">${imwebCta}</p>
+      <div style="height:1px;background:rgba(255,255,255,0.15);margin-bottom:24px;"></div>
+      <p class="beyond-banner-sub">아임웹은 '적당함'으로 풀 수 없는 문제를 풀고 있어요.</p>
       <p class="beyond-banner-title">AI로 기술적 문제를 해결하며,<br>제품과 비즈니스에 기여하는 경험을 해보세요</p>
       <div class="banner-form">
         <input class="banner-input" type="text" id="ctaName" placeholder="이름 *">
@@ -1161,11 +1160,10 @@ function showResult(fromShare) {
           </label>
         </div>
         <div class="banner-error" id="ctaError">필수 항목을 모두 입력하고 개인정보 수집에 동의해주세요.</div>
-        <button class="beyond-banner-btn" id="ctaSubmitBtn" onclick="submitCta()">관심 표현하기 →</button>
-        <p style="font-size:13px;color:rgba(255,255,255,0.7);text-align:center;margin-top:12px;line-height:1.5;">제출해주신 정보를 바탕으로, 적합한 포지션이 있을 경우<br>별도로 연락드리겠습니다.</p>
+        <button class="beyond-banner-btn" id="ctaSubmitBtn" onclick="submitCta()">내게 맞는 포지션 정보 받기 →</button>
+        <p style="font-size:13px;color:rgba(255,255,255,0.7);text-align:center;margin-top:12px;line-height:1.5;">입력해주신 정보를 바탕으로,<br>맞는 포지션을 안내드려요.</p>
       </div>
     </div>
-    <a href="https://beyond.imweb.me/?utm_source=ai-island-quiz&utm_medium=ads&utm_campaign=20260406_ai-island" target="_blank" rel="noopener" class="btn-beyond-bottom">채용 중인 포지션 보러가기 →</a>
   `;
 
   showScreen('result');
